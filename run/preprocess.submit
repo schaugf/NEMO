@@ -1,0 +1,21 @@
+#!/usr/bin/bash
+#SBATCH --job-name nemo
+#SBATCH --ntasks=1
+#SBATCH --get-user-env
+#SBATCH --time=24:00:00
+#SBATCH --mem=128000
+#SBATCH --err=log/%j.err
+#SBATCH --out=log/%j.out
+#SBATCH --array=0-333
+
+#SLIDEFILES=(data/raw/primary/*) #324 files
+SLIDEFILES=(data/raw/metastasis/*) #333 files
+
+python src/preprocess.py \
+    --slide_file ${SLIDEFILES[$SLURM_ARRAY_TASK_ID]} \
+    --save_dir data/processed \
+    --tile_dim 256 \
+    --background_cutoff 235 \
+    --image_level 0 \
+    --do_normalize 0
+
