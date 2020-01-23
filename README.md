@@ -4,6 +4,7 @@ Geoffrey F. Schau, Erik A. Burlingame, Guillaume Thibault, Tauangtham Anekpurita
 
 You can read the initial preprint on bioRxiv [here](https://www.biorxiv.org/content/10.1101/689828v1)
 
+<img src='assets/nemo_concept.png'>
 
 ## Overview
 
@@ -17,8 +18,6 @@ Finally, we compare our model's performance to that of three board-certified pat
 
 In this study, we utilize the [inception v4](https://github.com/kentsommer/keras-inceptionV4/blob/master/inception_v4.py) learning architecture.
 
-
-<img src='assets/nemo_concept.png'>
 
 
 ## Stage 1
