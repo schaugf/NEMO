@@ -19,7 +19,7 @@ Finally, we compare our model's performance to that of three board-certified pat
 In this study, we utilize the [inception v4](https://github.com/kentsommer/keras-inceptionV4/blob/master/inception_v4.py) learning architecture.
 
 
-## Stage 1
+## Stage 1: Tumor/Non-Tumor Region Classification
 
 The first stage model is designed to learn to correctly classify regions of whole slide images as either tumor tissue or normal liver or stroma. 
 
@@ -37,35 +37,56 @@ python src/get_annotations.py
 Whole slide images are first loaded and tiled into non-overlapping patches of 299x299 pixels.
 White background tiles are removed with a mean intensity threshold cutoff, and remaining tiles are normalized with an established method of histopathological color intensity normalization, included [here](https://github.com/schaugf/HEnorm_python).
 Slides can be preprocessed individually or in parallel on a slurm-equipped computing cluster.
+In each case, the preprocessing routine tiles the whole slide image, stores them as an 8-bit numpy tensor, and generates a per-tile binary target indicating whether the tile is in the annotated tumor region or not which are used as the target variable for the binary classification learning task. 
 
 ```bash
-python stage1_preprocess.py --slide_file
+python src/stage1_preprocess.py --slide_file
 sbatch run/stage1_preprocess.submit
 ```
 
 ### Data Parsing
 
+Next, whole slide images are randomly partitioned into training (70%) and testing (30%) sets.
+As each image is randomly assigned, composite training and testing tensors are generated and stored by concatenating the individual WSI tensors and label files.
 
+```bash
+python src/sort.py
+```
 
 ### Training
 
+Once training and testing tensors are generated, training may begin. We utilize a bank of NVIDIA V100 GPUs available through the OHSU Exacloud computing cluster which are requested through a slurm job submission.
+
+```bash
+python src/stage1_train.py
+sbatch run/stage1_train.submit
+```
 
 ### Evaluation
 
+Once trained, the model is deployed on both training and test sets to evaluate expected performance as we apply it to the entire dataset.
+
+```bash
+python src/stag1_evaluate.py
+sbatch run/stage1_evaluate.submit
+```
+
+Per-tile predictions are stitched back together to generate spatially registered predictions of tumor/non-tumor regions, as illustrated in this example where the model correctly identifies the small tumor region within normal liver. 
+
+<img src='assets/stage1_overlay.png' width="30%">
 
 
+## Stage 2: Metastatic Origin Prediction
 
-## Stage 2
+
 
 ### Preprocessing
 
-With Stage 1
-
 ### Training
 
 ### Evaluation
 
-## Pathologist Comparison
 
+## Pathologist Comparison
 
 
