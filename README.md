@@ -18,7 +18,7 @@ Finally, we compare our model's performance to that of three board-certified pat
 In this study, we utilize the [inception v4](https://github.com/kentsommer/keras-inceptionV4/blob/master/inception_v4.py) learning architecture.
 
 
-<img src='assets/nemo_concept.pdf' width='30%'>
+<img src='assets/nemo_concept.png' width='50%'>
 
 
 ## Stage 1
