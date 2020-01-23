@@ -73,7 +73,9 @@ sbatch run/stage1_evaluate.submit
 
 Per-tile predictions are stitched back together to generate spatially registered predictions of tumor/non-tumor regions, as illustrated in this example where the model correctly identifies the small tumor region within normal liver. 
 
-<img src='assets/stage1_overlay.jpg' width="30%"> <img src='assets/stage1_overlay.jpg' width="30%">
+<img src='assets/stage1_overlay.jpg' width="30%"> <img src='assets/closeup.png' width="30%">
+
+<img src='assets/stage1_overlay.jpg' =256x256> <img src='assets/closeup.png' =256x256>
 
 
 
