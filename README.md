@@ -73,17 +73,20 @@ sbatch run/stage1_evaluate.submit
 
 Per-tile predictions are stitched back together to generate spatially registered predictions of tumor/non-tumor regions, as illustrated in this example where the model correctly identifies the small tumor region within normal liver. 
 
-<img src='assets/stage1_overlay.jpg' width="30%"> <img src='assets/closeup.png' width="30%">
+<img src='assets/stage1_overlay.jpg' width="200"> 
 
-<img src='assets/stage1_overlay.jpg' =256x256> <img src='assets/closeup.png' =256x256>
+Zooming in, we can readily identify tumor regions being lit-up by the model's predictions as opposed to the darker surrounding normal liver structure.
 
+<img src='assets/closeup.png' width="200">
 
 
 ## Stage 2: Metastatic Origin Prediction
 
-
+The second stage of this approach requires first applying the learned first-stage model to the remaining dataset and then filtering out tiles from every whole slide image predicted to be of non-cancerous tissue and then learning a second model to correctly classify the metastatic origin of the tumor tissue given a training set that includes clinical determinations of metastatic origin confirmed by immunohistochemistry staining.
 
 ### Preprocessing
+
+
 
 ### Training
 
@@ -91,5 +94,9 @@ Per-tile predictions are stitched back together to generate spatially registered
 
 
 ## Pathologist Comparison
+
+
+
+
 
 
