@@ -19,31 +19,36 @@ Finally, we compare our model's performance to that of three board-certified pat
 In this study, we utilize the [inception v4](https://github.com/kentsommer/keras-inceptionV4/blob/master/inception_v4.py) learning architecture.
 
 
-
 ## Stage 1
 
-
-Include submission scripts
-
+The first stage model is designed to learn to correctly classify regions of whole slide images as either tumor tissue or normal liver or stroma. 
 
 ### Pathological Annotations
 
+Pathological annotations of tumor/non-tumor regions were provided by an expert pathologist through a secure instance of an OMERO server containing relevant images.
+All annotations are downloaded and stored as binary mask files for downstream data parsing, and are accessed with a simply utility script.
+
+```bash
+python src/get_annotations.py
+```
+
 ### Preprocessing
 
-```bash
-python preprocess.py --slide_file
-python split_data.py
-```
-
-In batch processing
+Whole slide images are first loaded and tiled into non-overlapping patches of 299x299 pixels.
+White background tiles are removed with a mean intensity threshold cutoff, and remaining tiles are normalized with an established method of histopathological color intensity normalization, included [here](https://github.com/schaugf/HEnorm_python).
+Slides can be preprocessed individually or in parallel on a slurm-equipped computing cluster.
 
 ```bash
-sbatch run/preprocess.submit
+python stage1_preprocess.py --slide_file
+sbatch run/stage1_preprocess.submit
 ```
+
+### Data Parsing
+
+
 
 ### Training
 
-Link to inception v4 github page
 
 ### Evaluation
 
