@@ -1,0 +1,37 @@
+#!/bin/bash
+#SBATCH --job-name trainHET
+#SBATCH --partition gpu
+#SBATCH --gres gpu:1,disk:1024
+#SBATCH --mem 64G
+#SBATCH --time 120:00:00
+#SBATCH --get-user-env
+#SBATCH --err log/train.err
+#SBATCH --out log/train.out
+#SBATCH --exclude exanode-7-18
+
+BATCHSIZE=64
+TRAINDIR=/mnt/scratch/tmpTrain
+DATAFILE=data/HEtumorTrainingData.tar.gz
+EPOCHS=25
+TILESIZE=299
+NCHANNEL=3
+NCLASSES=2
+SAVEDIR=results/test1
+
+mkdir $TRAINDIR 
+
+echo 'extracting files'
+tar -zxf $DATAFILE -C $TRAINDIR
+
+srun python src/train.py \
+    --trainDir $TRAINDIR/HEtumor/train \
+    --valDir $TRAINDIR/HEtumor/val \
+    --saveDir $SAVEDIR \
+    --tileSize $TILESIZE \
+    --nChannel $NCHANNEL \
+    --nClasses $NCLASSES \
+    --epochs $EPOCHS \
+    --batchSize $BATCHSIZE
+
+print('cleaning up')
+rm -rf $TRAINDIR
