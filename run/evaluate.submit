@@ -1,0 +1,24 @@
+#!/bin/bash
+#SBATCH --job-name NEMOev
+#SBATCH --ntasks=1
+#SBATCH --gres disk:16
+#SBATCH --get-user-env
+#SBATCH --time=4:00:00
+#SBATCH --mem 32000
+#SBATCH --err log/evaluate.err
+#SBATCH --out log/evaluate.out
+#SBATCH --array 0-332
+
+TILEDIR=(data/tiles/*)
+RESULTSDIR=results/allClassesWeighted
+SCRATCHDIR=/mnt/scratch/tmp_nemo
+
+srun python src/evaluate.py \
+    --slideFile ${TILEDIR[$SLURM_ARRAY_TASK_ID]} \
+    --tileDir data/tiles \
+    --assemblyDir data/assemblies \
+    --trainDir data/train \
+    --modelFile $RESULTSDIR/model.h5 \
+    --saveDir $RESULTSDIR \
+    --scratchDir $SCRATCHDIR
+
