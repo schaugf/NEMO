@@ -1,0 +1,32 @@
+#!/usr/bin/bash
+#SBATCH --job-name NEMOso
+#SBATCH --gres disk:1028
+#SBATCH --ntasks 1
+#SBATCH --get-user-env
+#SBATCH --time 12:00:00
+#SBATCH --mem 32000
+#SBATCH --err log/sort.err
+#SBATCH --out log/sort.out
+
+TILEDIR=data/tiles
+WRITEDIR=/mnt/scratch/tmp_nemo
+SAVEDIR=data
+ANNOTFILE=data/fullAnnotation.csv
+
+mkdir $WRITEDIR
+
+python src/stage2_sort.py \
+		--tileDir $TILEDIR \
+		--writeDir $WRITEDIR \
+		--saveDir $SAVEDIR \
+		--annotFile $ANNOTFILE
+
+echo 'compressing training data'
+tar -czf $SAVEDIR/train.tar.gz -C $WRITEDIR/train .
+echo 'compressing testing data'
+tar -czf $SAVEDIR/test.tar.gz -C $WRITEDIR/test .
+
+echo 'cleaning up'
+rm -rf $WRITEDIR
+
+

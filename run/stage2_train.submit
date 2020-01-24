@@ -1,0 +1,37 @@
+#!/bin/bash
+#SBATCH --job-name NEMOtr
+#SBATCH --partition gpu
+#SBATCH --gres gpu:v100:1
+#SBATCH --gres disk:1024
+#SBATCH --mem 64G
+#SBATCH --time 200:00:00
+#SBATCH --get-user-env
+#SBATCH --err log/train.err
+#SBATCH --out log/train.out
+
+BATCHSIZE=64
+TRAINDIR=/mnt/scratch/tmp_nemo
+EPOCHS=5
+TILESIZE=256
+NCHANNEL=3
+NCLASSES=14
+SAVEDIR=results/allClasses
+
+mkdir $TRAINDIR 
+echo 'extracting training files on scratch'
+tar -zxf data/train.tar.gz -C $TRAINDIR
+echo 'removing unused files'
+rm -rf $TRAINDIR/train/unused
+echo 'beginning training'
+
+srun python src/stage2_train.py \
+    --trainDir $TRAINDIR/train \
+    --saveDir $SAVEDIR \
+    --tileSize $TILESIZE \
+    --nChannel $NCHANNEL \
+    --nClasses $NCLASSES \
+    --epochs $EPOCHS \
+    --batchSize $BATCHSIZE
+
+print('cleaning up')
+rm -rf $TRAINDIR

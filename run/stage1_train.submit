@@ -23,7 +23,7 @@ mkdir $TRAINDIR
 echo 'extracting files'
 tar -zxf $DATAFILE -C $TRAINDIR
 
-srun python src/train.py \
+srun python src/stage1_train.py \
     --trainDir $TRAINDIR/HEtumor/train \
     --valDir $TRAINDIR/HEtumor/val \
     --saveDir $SAVEDIR \

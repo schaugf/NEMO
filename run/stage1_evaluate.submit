@@ -13,7 +13,7 @@ TILEDIR=(data/tiles/*)
 RESULTSDIR=results/allClassesWeighted
 SCRATCHDIR=/mnt/scratch/tmp_nemo
 
-srun python src/stage2_evaluate.py \
+srun python src/stage1_evaluate.py \
     --slideFile ${TILEDIR[$SLURM_ARRAY_TASK_ID]} \
     --tileDir data/tiles \
     --assemblyDir data/assemblies \

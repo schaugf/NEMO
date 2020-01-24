@@ -1,0 +1,26 @@
+#!/usr/bin/bash
+#SBATCH --job-name NEMOpr
+#SBATCH --gres disk:8
+#SBATCH --ntasks=1
+#SBATCH --get-user-env
+#SBATCH --time=12:00:00
+#SBATCH --mem=32000
+#SBATCH --err=log/preprocess.err
+#SBATCH --out=log/preprocess.out
+#SBATCH --array=0-332
+
+SLIDEDIR=(data/raw/LiverMets/*)
+FILENAME=$(basename ${SLIDEDIR[$SLURM_ARRAY_TASK_ID]} .svs)
+mkdir data/tiles
+
+srun python src/stage2_preprocess.py \
+    --slideFile ${SLIDEDIR[$SLURM_ARRAY_TASK_ID]} \
+    --tileDir /mnt/scratch/$FILENAME \
+    --assemblyDir data/assemblies \
+    --tileSize 256 \
+    --cutoff 235 \
+    --level 0 \
+    --verbose 0
+
+tar -czf data/tiles/$FILENAME.tar.gz -C /mnt/scratch/$FILENAME .
+rm -r /mnt/scratch/$FILENAME
